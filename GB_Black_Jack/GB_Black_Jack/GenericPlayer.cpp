@@ -1,100 +1,79 @@
 ﻿#include "GenericPlayer.h"
+#include <iostream>
 
 
-std::ostream& operator<<(std::ostream& os, const GenericPlayer& Current_Player)
+GenericPlayer::GenericPlayer(Deck * main_deck)
 {
-    return os;
+    main_deck_ = main_deck;
 }
 
-GenericPlayer::GenericPlayer(const std::string& name)
+int GenericPlayer::get_total() const
 {
-    
+    return p_hand_.get_total();
 }
 
-bool GenericPlayer::IsHitting()
+void GenericPlayer::addltional_card()
 {
-    return false;
+    p_hand_.add_card (main_deck_->dealing_card());
 }
 
-bool GenericPlayer::IsBusted()
+void GenericPlayer::print_hand()
 {
-    return false;
+    std::cout << p_name_ << ":\t";
+    p_hand_.print_hand();
+    std::cout << std::endl;
 }
 
-void GenericPlayer::Bust() 
+Player::Player(const std::string& name, Deck * main_deck):
+    GenericPlayer(main_deck)
 {
+    p_name_ = name;
 }
 
-GenericPlayer::~GenericPlayer()
+void Player::turn()
 {
-}
-
-Player::Player(const std::string& name)
-{
-}
-
-bool Player::IsHitting()
-{
-    return GenericPlayer::IsHitting();
-}
-
-void Player::Win() const
-{
-}
-
-void Player::Lose() const
-{
-}
-
-void Player::Push() const
-{
-}
-
-Player::~Player()
-{
-}
-
-int GenericPlayer::GetTotal() const
-{
-    // находим сумму очков всех карт, каждый туз дает 1 очко и определяем, держит ли рука туз
-    int total = 0;
-    bool containsAce = false;
-    std::vector<Card*>::const_iterator iter;
-    for (iter = m_cards_.begin(); iter != m_cards_.end(); ++iter)
+    char hit {};
+    while (hit != 'n')
     {
-        int card_value = (*iter)->get_value_();
-        if ((*iter)->get_value_() == ACE)
+        std::cin >> hit;
+        if (hit == 'y')
         {
-            containsAce = true;
+            addltional_card();
+            print_hand();
+            
+            if (p_hand_.get_total() >= 21)
+            {
+                break;
+            }
         }
-        total += card_value;
+        else
+        {
+            break;
+        }
     }
-    
-    // если рука держит туз и сумма маленькая, добавляем 10 очков
-    if (containsAce && total <= 11)
+}
+
+Dealer::Dealer(Deck * main_deck): GenericPlayer(main_deck)
+{
+    p_name_ = "Dealer";
+}
+
+void Dealer::flip_first()
+{
+    p_hand_.flip_first();
+}
+
+
+void Dealer::turn()
+{
+    while (p_hand_.get_total() <= 16)
     {
-        total += 10;
+        addltional_card();
+        print_hand();
+        
+        if (p_hand_.get_total() >= 21)
+        {
+            break;
+        }
     }
-    
-    return total;
-}
-
-
-House::House(const std::string& name)
-{
-}
-
-bool House::IsHitting()
-{
-    return {};
-}
-
-void House::FlipFirstCard()
-{
-    
-}
-
-House::~House()
-{
-    
 }

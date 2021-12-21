@@ -1,5 +1,7 @@
 ﻿#include "Card.h"
 
+#include <iostream>
+
 
 Card::Card(E_RANK c_rank, E_SUIT c_suit)
 : 
@@ -8,7 +10,6 @@ Card::Card(E_RANK c_rank, E_SUIT c_suit)
 {
 }
 
-
 Card::Card(int c_rank, int c_suit)
 : 
   m_rank_(static_cast<E_RANK>(c_rank)),
@@ -16,14 +17,13 @@ Card::Card(int c_rank, int c_suit)
 {
 }
 
-
 void Card::flip()
 {
     b_is_face_up_ = !(b_is_face_up_);
 }
 
 
-int Card::get_value_() const
+int Card::get_value() const
 {
     // если карта перевернута лицом вниз, ее значение равно О
     int value = 0;
@@ -40,10 +40,16 @@ int Card::get_value_() const
     return value;
 }
 
-
-void Card::print_card()
+void Card::print_card() const
 {
-    
+    if (b_is_face_up_)
+    {
+        std::cout << m_rank_ << " " <<m_suit_;
+    }
+    else
+    {
+        std::cout << "* *";
+    }
 }
 
 

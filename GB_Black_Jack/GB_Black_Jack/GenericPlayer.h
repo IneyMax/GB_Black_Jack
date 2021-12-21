@@ -1,69 +1,49 @@
 ﻿#pragma once
 #include <string>
-
 #include "CardConatainer.h"
 
 
-// абстрактный класс
-class GenericPlayer : public CardConatainer
+class GenericPlayer
 {
 protected:
-    std::string m_name_;
-    friend std::ostream& operator << (std::ostream& os, const GenericPlayer& Current_Player);
+    Deck *main_deck_;
+    PlayerHand p_hand_;
+    std::string p_name_;
 public:
-    GenericPlayer(const std::string& name = "");
-
-    int GetTotal() const;
+    GenericPlayer(Deck * main_deck);
     
-    // показывает, хочет ли игрок продолжать брать карты
-    virtual bool IsHitting();
-
-    // возвращает значение, если у игрока перебор -
-    // сумму очков большую 21
-    bool IsBusted();
+    int get_total() const;
+    void addltional_card();
+    void print_hand();
     
-    // объявляет, что игрок имеет перебор
-    // функция одинакова как для игрока, так и для дилера
-    void Bust();
+    virtual void turn() = 0;
     
-protected:
-    virtual ~GenericPlayer();
+    virtual ~GenericPlayer(){};
 };
 
 
 class Player : public GenericPlayer
 {
 public:
-    Player(const std::string & name = "");
+    explicit Player(const std::string & name, Deck * main_deck);
     
-    // показывает, хочет ли игрок продолжать брать карты
-    bool IsHitting() override;
+    void turn() override;
     
-    // объявляет, что игрок победил
-    void Win() const;
-    
-    // объявляет, что игрок проиграл
-    void Lose() const;
-    
-    // объявляет ничью
-    void Push() const;
-
-    virtual ~Player();
+    virtual ~Player(){}
 };
 
 
-class House : public GenericPlayer
+class Dealer : public GenericPlayer
 {
 public:
-    House(const std::string & name = "House");
-    
-    // показывает, хочет ли дилер продолжать брать карты
-    bool IsHitting() override;
-    
-    // переворачивает первую карту
-    void FlipFirstCard();
+    Dealer(Deck * main_deck);
 
-    virtual ~House();
+    void flip_first();
+    void turn() override;
+    
+    virtual ~Dealer(){}
 };
+
+
 
 

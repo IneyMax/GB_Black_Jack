@@ -28,7 +28,7 @@ enum E_SUIT
 
 class Card
 {
- bool b_is_face_up_ {};
+ bool b_is_face_up_ {true};
  E_RANK m_rank_ {};
  E_SUIT m_suit_ {};
  
@@ -38,6 +38,6 @@ public:
  Card(int c_rank, int c_suit);
 
  void flip();
- int get_value_() const;
- void print_card();
+ int get_value() const;
+ void print_card() const;
 };
